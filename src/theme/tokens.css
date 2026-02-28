@@ -1,0 +1,136 @@
+:root {
+  /* ─── Color: Primary (Indigo) ─── */
+  --nc-color-primary-50: #eef2ff;
+  --nc-color-primary-100: #e0e7ff;
+  --nc-color-primary-200: #c7d2fe;
+  --nc-color-primary-300: #a5b4fc;
+  --nc-color-primary-400: #818cf8;
+  --nc-color-primary-500: #6366f1;
+  --nc-color-primary-600: #4f46e5;
+  --nc-color-primary-700: #4338ca;
+  --nc-color-primary-800: #3730a3;
+  --nc-color-primary-900: #312e81;
+  --nc-color-primary-950: #1e1b4b;
+
+  /* ─── Color: Neutral ─── */
+  --nc-color-neutral-50: #fafafa;
+  --nc-color-neutral-100: #f5f5f5;
+  --nc-color-neutral-200: #e5e5e5;
+  --nc-color-neutral-300: #d4d4d4;
+  --nc-color-neutral-400: #a3a3a3;
+  --nc-color-neutral-500: #737373;
+  --nc-color-neutral-600: #525252;
+  --nc-color-neutral-700: #404040;
+  --nc-color-neutral-800: #262626;
+  --nc-color-neutral-900: #171717;
+  --nc-color-neutral-950: #0a0a0a;
+
+  /* ─── Color: Semantic ─── */
+  --nc-color-success-50: #f0fdf4;
+  --nc-color-success-100: #dcfce7;
+  --nc-color-success-500: #22c55e;
+  --nc-color-success-600: #16a34a;
+  --nc-color-success-700: #15803d;
+
+  --nc-color-warning-50: #fffbeb;
+  --nc-color-warning-100: #fef3c7;
+  --nc-color-warning-500: #f59e0b;
+  --nc-color-warning-600: #d97706;
+  --nc-color-warning-700: #b45309;
+
+  --nc-color-danger-50: #fef2f2;
+  --nc-color-danger-100: #fee2e2;
+  --nc-color-danger-500: #ef4444;
+  --nc-color-danger-600: #dc2626;
+  --nc-color-danger-700: #b91c1c;
+
+  --nc-color-info-50: #eff6ff;
+  --nc-color-info-100: #dbeafe;
+  --nc-color-info-500: #3b82f6;
+  --nc-color-info-600: #2563eb;
+  --nc-color-info-700: #1d4ed8;
+
+  /* ─── Typography ─── */
+  --nc-font-family-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --nc-font-family-mono: 'Fira Code', 'Cascadia Code', Consolas, monospace;
+  --nc-font-size-xs: 0.75rem;
+  --nc-font-size-sm: 0.875rem;
+  --nc-font-size-md: 1rem;
+  --nc-font-size-lg: 1.125rem;
+  --nc-font-size-xl: 1.25rem;
+  --nc-font-weight-normal: 400;
+  --nc-font-weight-medium: 500;
+  --nc-font-weight-semibold: 600;
+  --nc-font-weight-bold: 700;
+  --nc-line-height-tight: 1.25;
+  --nc-line-height-normal: 1.5;
+  --nc-line-height-relaxed: 1.75;
+
+  /* ─── Spacing ─── */
+  --nc-spacing-0: 0;
+  --nc-spacing-1: 0.25rem;
+  --nc-spacing-2: 0.5rem;
+  --nc-spacing-3: 0.75rem;
+  --nc-spacing-4: 1rem;
+  --nc-spacing-5: 1.25rem;
+  --nc-spacing-6: 1.5rem;
+  --nc-spacing-8: 2rem;
+  --nc-spacing-10: 2.5rem;
+  --nc-spacing-12: 3rem;
+
+  /* ─── Border Radius ─── */
+  --nc-radius-none: 0;
+  --nc-radius-sm: 0.25rem;
+  --nc-radius-md: 0.375rem;
+  --nc-radius-lg: 0.5rem;
+  --nc-radius-xl: 0.75rem;
+  --nc-radius-2xl: 1rem;
+  --nc-radius-full: 9999px;
+
+  /* ─── Shadows ─── */
+  --nc-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --nc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --nc-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --nc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --nc-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* ─── Transitions ─── */
+  --nc-transition-fast: 150ms ease;
+  --nc-transition-normal: 200ms ease;
+  --nc-transition-slow: 300ms ease;
+
+  /* ─── Z-Index ─── */
+  --nc-z-dropdown: 1000;
+  --nc-z-sticky: 1020;
+  --nc-z-modal: 1050;
+  --nc-z-popover: 1060;
+  --nc-z-tooltip: 1070;
+  --nc-z-toast: 1080;
+
+  /* ─── Focus Ring ─── */
+  --nc-focus-ring: 0 0 0 3px rgba(99, 102, 241, 0.4);
+  --nc-focus-ring-offset: 0 0 0 2px #fff, 0 0 0 4px rgba(99, 102, 241, 0.4);
+}
+
+/* ─── Dark Theme Overrides ─── */
+[data-theme="dark"] {
+  --nc-color-neutral-50: #0a0a0a;
+  --nc-color-neutral-100: #171717;
+  --nc-color-neutral-200: #262626;
+  --nc-color-neutral-300: #404040;
+  --nc-color-neutral-400: #525252;
+  --nc-color-neutral-500: #737373;
+  --nc-color-neutral-600: #a3a3a3;
+  --nc-color-neutral-700: #d4d4d4;
+  --nc-color-neutral-800: #e5e5e5;
+  --nc-color-neutral-900: #f5f5f5;
+  --nc-color-neutral-950: #fafafa;
+
+  --nc-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --nc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --nc-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --nc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+
+  --nc-focus-ring: 0 0 0 3px rgba(129, 140, 248, 0.5);
+  --nc-focus-ring-offset: 0 0 0 2px #171717, 0 0 0 4px rgba(129, 140, 248, 0.5);
+}

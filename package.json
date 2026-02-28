@@ -1,0 +1,59 @@
+{
+  "name": "@novacraft/core",
+  "version": "0.1.0",
+  "description": "NovaCraft UI — Zero-Dependency Framework-Agnostic Component Library",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./button": "./dist/esm/components/button/button.js",
+    "./badge": "./dist/esm/components/badge/badge.js",
+    "./card": "./dist/esm/components/card/card.js",
+    "./icon": "./dist/esm/components/icon/icon.js",
+    "./spinner": "./dist/esm/components/spinner/spinner.js",
+    "./skeleton": "./dist/esm/components/skeleton/skeleton.js",
+    "./theme-toggle": "./dist/esm/components/theme-toggle/theme-toggle.js",
+    "./tooltip": "./dist/esm/components/tooltip/tooltip.js",
+    "./avatar": "./dist/esm/components/avatar/avatar.js",
+    "./status-badge": "./dist/esm/components/status-badge/status-badge.js",
+    "./tokens": "./dist/css/tokens.css"
+  },
+  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "sideEffects": false,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "keywords": ["web-components", "custom-elements", "ui-library", "component-library", "shadow-dom", "design-system", "framework-agnostic", "zero-dependency"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.3.0",
+    "vitest": "^2.1.0",
+    "jsdom": "^25.0.0",
+    "terser": "^5.36.0",
+    "@vitest/coverage-v8": "^2.1.0",
+    "storybook": "^8.4.0",
+    "@storybook/web-components-vite": "^8.4.0",
+    "@storybook/addon-essentials": "^8.4.0",
+    "@storybook/addon-a11y": "^8.4.0",
+    "@storybook/blocks": "^8.4.0",
+    "lit": "^3.2.0"
+  }
+}
