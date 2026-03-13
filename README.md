@@ -121,40 +121,228 @@ All 30 components are available from `@novacraft/core/react` with full TypeScrip
 
 ### Angular (15+)
 
-Angular supports Web Components natively via `CUSTOM_ELEMENTS_SCHEMA`. NovaCraft UI also provides a `NovaCraftModule` (source in [`src/wrappers/angular/`](./src/wrappers/angular/novacraft.module.ts)) that adds `[(ngModel)]` / reactive forms support to all form components.
+Angular supports Web Components natively via `CUSTOM_ELEMENTS_SCHEMA`. NovaCraft UI provides a ready-made `NovaCraftModule` that adds:
+
+- `[(ngModel)]` and **reactive forms** support on all 6 form components (`nc-input`, `nc-textarea`, `nc-select`, `nc-checkbox`, `nc-toggle`, `nc-radio-group`)
+- Proper `[open]` boolean binding on `nc-modal` and `nc-drawer`
+- Auto-registers all 30 web components on module import
+
+> **Why copy instead of import?** Angular libraries must be compiled with `ng-packagr` to be importable as an npm package. NovaCraft UI is a framework-agnostic library, so the Angular module ships as TypeScript source you add once to your project.
+
+---
+
+**Step 1 — Install the package:**
 
 ```bash
 npm install @novacraft/core
 ```
 
-**Step 1 — Import the module:**
+---
+
+**Step 2 — Add `novacraft.module.ts` to your Angular project:**
+
+Save the file to `src/app/novacraft.module.ts` inside your Angular project.
+
+You have two options:
+
+**Option A — Download the file directly:**
+
+[⬇ Download novacraft.module.ts](https://raw.githubusercontent.com/mdehtisham/novacraft-ui/master/src/wrappers/angular/novacraft.module.ts)
+
+> Right-click the link → **Save Link As** → save to `your-angular-project/src/app/novacraft.module.ts`
+
+Or with curl:
+```bash
+curl -o src/app/novacraft.module.ts \
+  https://raw.githubusercontent.com/mdehtisham/novacraft-ui/master/src/wrappers/angular/novacraft.module.ts
+```
+
+**Option B — Copy and paste the content:**
+
+<details>
+<summary>📋 Click to expand — copy the full file content</summary>
 
 ```typescript
-// app.module.ts
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NovaCraftModule } from './novacraft.module'; // copy from src/wrappers/angular/
-import '@novacraft/core/tokens';
+import {
+  NgModule,
+  Directive,
+  ElementRef,
+  forwardRef,
+  HostListener,
+  Input,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+@Directive({
+  selector: 'nc-input, nc-textarea, nc-select, nc-checkbox, nc-toggle, nc-radio-group',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => NcValueAccessorDirective),
+      multi: true,
+    },
+  ],
+})
+export class NcValueAccessorDirective implements ControlValueAccessor {
+  private onChange: (value: unknown) => void = () => {};
+  private onTouched: () => void = () => {};
+
+  constructor(private el: ElementRef) {}
+
+  writeValue(value: unknown): void {
+    const element = this.el.nativeElement;
+    const tagName = element.tagName.toLowerCase();
+    if (tagName === 'nc-checkbox' || tagName === 'nc-toggle') {
+      if (value) element.setAttribute('checked', '');
+      else element.removeAttribute('checked');
+    } else {
+      element.setAttribute('value', value != null ? String(value) : '');
+    }
+  }
+
+  registerOnChange(fn: (value: unknown) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    if (isDisabled) this.el.nativeElement.setAttribute('disabled', '');
+    else this.el.nativeElement.removeAttribute('disabled');
+  }
+
+  @HostListener('nc-change', ['$event'])
+  handleChange(event: CustomEvent): void {
+    const tagName = this.el.nativeElement.tagName.toLowerCase();
+    if (tagName === 'nc-checkbox' || tagName === 'nc-toggle') {
+      this.onChange(event.detail?.checked);
+    } else {
+      this.onChange(event.detail?.value ?? this.el.nativeElement.getAttribute('value'));
+    }
+  }
+
+  @HostListener('nc-input', ['$event'])
+  handleInput(event: CustomEvent): void {
+    this.onChange(event.detail?.value ?? this.el.nativeElement.getAttribute('value'));
+  }
+
+  @HostListener('nc-blur')
+  handleBlur(): void {
+    this.onTouched();
+  }
+}
+
+@Directive({ selector: 'nc-modal' })
+export class NcModalDirective {
+  @Input() set open(value: boolean) {
+    if (value) this.el.nativeElement.setAttribute('open', '');
+    else this.el.nativeElement.removeAttribute('open');
+  }
+  constructor(private el: ElementRef) {}
+}
+
+@Directive({ selector: 'nc-drawer' })
+export class NcDrawerDirective {
+  @Input() set open(value: boolean) {
+    if (value) this.el.nativeElement.setAttribute('open', '');
+    else this.el.nativeElement.removeAttribute('open');
+  }
+  constructor(private el: ElementRef) {}
+}
 
 @NgModule({
-  imports: [NovaCraftModule],
+  declarations: [NcValueAccessorDirective, NcModalDirective, NcDrawerDirective],
+  exports: [NcValueAccessorDirective, NcModalDirective, NcDrawerDirective],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+export class NovaCraftModule {
+  constructor() {
+    import('@novacraft/core');
+  }
+}
+```
+
+</details>
+
+After saving, your project structure should look like:
+
+```
+your-angular-project/
+└── src/
+    └── app/
+        ├── novacraft.module.ts   ← paste here
+        ├── app.module.ts
+        └── app.component.ts
+```
+
+---
+
+**Step 3 — Import `NovaCraftModule` in your app:**
+
+```typescript
+// src/app/app.module.ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';       // required for [(ngModel)]
+import { NovaCraftModule } from './novacraft.module'; // the file you just added
+import '@novacraft/core/tokens';                     // design tokens CSS
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, FormsModule, NovaCraftModule],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
 
-**Step 2 — Use components with full Angular binding support:**
+For **standalone components** (Angular 17+), import the directives directly:
+
+```typescript
+// any.component.ts
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NcValueAccessorDirective, NcModalDirective, NcDrawerDirective } from './novacraft.module';
+
+@Component({
+  standalone: true,
+  imports: [FormsModule, NcValueAccessorDirective, NcModalDirective, NcDrawerDirective],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `...`,
+})
+export class MyComponent {}
+```
+
+---
+
+**Step 4 — Use components with full Angular binding support:**
 
 ```html
+<!-- src/app/app.component.html -->
+
 <!-- Template-driven forms — [(ngModel)] works on all form components -->
 <nc-input label="Email" type="email" [(ngModel)]="email" required></nc-input>
 <nc-textarea label="Message" [(ngModel)]="message" auto-grow></nc-textarea>
 <nc-select label="Role" [(ngModel)]="role"></nc-select>
-<nc-checkbox label="Subscribe" [(ngModel)]="subscribe"></nc-checkbox>
+<nc-checkbox label="Subscribe to updates" [(ngModel)]="subscribe"></nc-checkbox>
 <nc-toggle label="Dark Mode" [(ngModel)]="darkMode"></nc-toggle>
+<nc-radio-group name="plan" [(ngModel)]="plan">
+  <nc-radio value="free">Free</nc-radio>
+  <nc-radio value="pro">Pro</nc-radio>
+</nc-radio-group>
 
-<!-- Boolean inputs — Angular [property] binding works -->
+<!-- Modal and Drawer — boolean [open] binding works -->
 <nc-modal [open]="showModal" (nc-close)="showModal = false">
-  <span slot="title">Confirm</span>
+  <span slot="title">Confirm Action</span>
+  <p>Are you sure you want to continue?</p>
+  <div slot="footer">
+    <nc-button variant="ghost" (nc-click)="showModal = false">Cancel</nc-button>
+    <nc-button variant="primary" (nc-click)="confirm()">Confirm</nc-button>
+  </div>
 </nc-modal>
 
 <nc-button variant="primary" [loading]="isLoading" (nc-click)="submit()">
@@ -162,7 +350,31 @@ export class AppModule {}
 </nc-button>
 ```
 
-> **Copy the module:** Angular cannot import NovaCraft's Angular module as a pre-compiled package (Angular libraries require `ng-packagr`). Copy [`src/wrappers/angular/novacraft.module.ts`](./src/wrappers/angular/novacraft.module.ts) into your project — it's a single self-contained file with no extra dependencies.
+```typescript
+// src/app/app.component.ts
+import { Component } from '@angular/core';
+
+@Component({ selector: 'app-root', templateUrl: './app.component.html' })
+export class AppComponent {
+  email = '';
+  message = '';
+  role = '';
+  subscribe = false;
+  darkMode = false;
+  plan = 'free';
+  showModal = false;
+  isLoading = false;
+
+  submit() {
+    this.isLoading = true;
+    // your submit logic
+  }
+
+  confirm() {
+    this.showModal = false;
+  }
+}
+```
 
 ---
 
