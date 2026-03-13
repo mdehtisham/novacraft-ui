@@ -79,79 +79,90 @@ import '@novacraft/core/tokens'; // design tokens CSS (required for theming)
 
 ### React (18+)
 
-Since React 19 has full support for Web Components, you can use NovaCraft UI tags directly in JSX.
+NovaCraft UI ships a **first-class React wrapper** at `@novacraft/core/react`. Every component is a fully typed `forwardRef` component with React-style event props (`onNcClick`, `onNcChange`, etc.) instead of raw DOM listeners.
+
+```bash
+npm install @novacraft/core
+```
 
 ```tsx
-// main.tsx or index.tsx — register once
+// main.tsx — register the web components once
 import '@novacraft/core';
 import '@novacraft/core/tokens';
 ```
 
 ```tsx
-// Any component
+// Use the React wrapper for typed props + idiomatic event handling
+import { NcButton, NcInput, NcModal, NcAlert } from '@novacraft/core/react';
+
 export function LoginForm() {
-  const handleClick = (e: Event) => console.log('clicked', e);
+  const [open, setOpen] = React.useState(false);
 
   return (
-    <form>
-      <nc-input label="Email" type="email" required></nc-input>
-      <nc-input label="Password" type="password"></nc-input>
-      <nc-button variant="primary" onncclick={handleClick}>
+    <>
+      <NcInput label="Email" type="email" required onNcChange={(e) => console.log(e.detail.value)} />
+      <NcInput label="Password" type="password" />
+      <NcButton variant="primary" onNcClick={() => setOpen(true)}>
         Sign In
-      </nc-button>
-    </form>
+      </NcButton>
+
+      <NcModal open={open} onNcClose={() => setOpen(false)}>
+        <span slot="title">Welcome back</span>
+        <NcAlert variant="success">Login successful!</NcAlert>
+      </NcModal>
+    </>
   );
 }
 ```
 
-> **React 18 note:** Custom events use lowercase `onncclick` in JSX. For a fully typed experience on React 18, add custom element type declarations — see [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md#react).
+All 30 components are available from `@novacraft/core/react` with full TypeScript types. React is an **optional peer dependency** — non-React users are never affected.
 
 ---
 
 ### Angular (15+)
 
+Angular supports Web Components natively via `CUSTOM_ELEMENTS_SCHEMA`. NovaCraft UI also provides a `NovaCraftModule` (source in [`src/wrappers/angular/`](./src/wrappers/angular/novacraft.module.ts)) that adds `[(ngModel)]` / reactive forms support to all form components.
+
+```bash
+npm install @novacraft/core
+```
+
+**Step 1 — Import the module:**
+
 ```typescript
 // app.module.ts
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import '@novacraft/core';
+import { NovaCraftModule } from './novacraft.module'; // copy from src/wrappers/angular/
 import '@novacraft/core/tokens';
 
 @NgModule({
+  imports: [NovaCraftModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}
 ```
 
+**Step 2 — Use components with full Angular binding support:**
+
 ```html
-<!-- app.component.html -->
-<nc-input label="Email" [value]="email" (ncchange)="onEmailChange($event)"></nc-input>
-<nc-toggle label="Notifications" [checked]="notifications"></nc-toggle>
-<nc-button variant="primary" [loading]="isLoading" (ncclick)="submit()">
+<!-- Template-driven forms — [(ngModel)] works on all form components -->
+<nc-input label="Email" type="email" [(ngModel)]="email" required></nc-input>
+<nc-textarea label="Message" [(ngModel)]="message" auto-grow></nc-textarea>
+<nc-select label="Role" [(ngModel)]="role"></nc-select>
+<nc-checkbox label="Subscribe" [(ngModel)]="subscribe"></nc-checkbox>
+<nc-toggle label="Dark Mode" [(ngModel)]="darkMode"></nc-toggle>
+
+<!-- Boolean inputs — Angular [property] binding works -->
+<nc-modal [open]="showModal" (nc-close)="showModal = false">
+  <span slot="title">Confirm</span>
+</nc-modal>
+
+<nc-button variant="primary" [loading]="isLoading" (nc-click)="submit()">
   Submit
 </nc-button>
 ```
 
-```typescript
-// app.component.ts
-import { Component } from '@angular/core';
-
-@Component({ selector: 'app-root', templateUrl: './app.component.html' })
-export class AppComponent {
-  email = '';
-  notifications = true;
-  isLoading = false;
-
-  onEmailChange(e: Event) {
-    this.email = (e as CustomEvent).detail.value;
-  }
-
-  submit() {
-    this.isLoading = true;
-  }
-}
-```
-
-For standalone Angular components, add `CUSTOM_ELEMENTS_SCHEMA` to the component's `schemas` array instead.
+> **Copy the module:** Angular cannot import NovaCraft's Angular module as a pre-compiled package (Angular libraries require `ng-packagr`). Copy [`src/wrappers/angular/novacraft.module.ts`](./src/wrappers/angular/novacraft.module.ts) into your project — it's a single self-contained file with no extra dependencies.
 
 ---
 

@@ -59,7 +59,7 @@ function createComponent<P extends Record<string, unknown>>(
       class: className,
       style,
       ...filteredProps
-    }, children);
+    }, children as React.ReactNode);
   });
 
   Component.displayName = tagName.replace('nc-', 'Nc').replace(/-./g, x => x[1].toUpperCase());

@@ -6,15 +6,21 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'NovaCraftUI',
-      formats: ['es', 'cjs', 'iife'],
-      // Map Vite's 'es' format name → dist/esm/ to match package.json exports
-      fileName: (format) => `${format === 'es' ? 'esm' : format}/index.js`,
+      entry: {
+        index: resolve(__dirname, 'src/index.ts'),
+        react: resolve(__dirname, 'src/wrappers/react/index.tsx'),
+      },
+      formats: ['es', 'cjs'],
+      // index → dist/esm/index.js + dist/cjs/index.js
+      // react → dist/esm/react.js + dist/cjs/react.js
+      fileName: (format, entryName) =>
+        `${format === 'es' ? 'esm' : format}/${entryName}.js`,
     },
     rollupOptions: {
+      // React is a peer dependency — never bundle it
+      external: ['react'],
       output: {
-        // Ensure the extracted CSS lands at dist/css/tokens.css
+        globals: { react: 'React' },
         assetFileNames: (info) => {
           if (info.name?.endsWith('.css')) return 'css/tokens.css';
           return 'assets/[name][extname]';
