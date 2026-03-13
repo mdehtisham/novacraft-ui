@@ -44,7 +44,10 @@
     "zero-dependency",
     "typescript"
   ],
-  "author": "mdehtisham",
+  "author": {
+    "name": "mdehtisham",
+    "url": "https://github.com/mdehtisham"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
