@@ -1,46 +1,65 @@
 {
   "name": "@novacraft/core",
   "version": "0.1.0",
-  "description": "NovaCraft UI — Zero-Dependency Framework-Agnostic Component Library",
+  "description": "NovaCraft UI — Zero-Dependency Framework-Agnostic Web Component Library",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/cjs/index.js"
     },
-    "./button": "./dist/esm/components/button/button.js",
-    "./badge": "./dist/esm/components/badge/badge.js",
-    "./card": "./dist/esm/components/card/card.js",
-    "./icon": "./dist/esm/components/icon/icon.js",
-    "./spinner": "./dist/esm/components/spinner/spinner.js",
-    "./skeleton": "./dist/esm/components/skeleton/skeleton.js",
-    "./theme-toggle": "./dist/esm/components/theme-toggle/theme-toggle.js",
-    "./tooltip": "./dist/esm/components/tooltip/tooltip.js",
-    "./avatar": "./dist/esm/components/avatar/avatar.js",
-    "./status-badge": "./dist/esm/components/status-badge/status-badge.js",
     "./tokens": "./dist/css/tokens.css"
   },
-  "files": ["dist", "README.md", "CHANGELOG.md"],
-  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": ["**/*.css"],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src --ext .ts",
-    "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "prepublishOnly": "npm run typecheck && npm run build"
   },
-  "keywords": ["web-components", "custom-elements", "ui-library", "component-library", "shadow-dom", "design-system", "framework-agnostic", "zero-dependency"],
-  "author": "",
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "ui-library",
+    "component-library",
+    "shadow-dom",
+    "design-system",
+    "framework-agnostic",
+    "zero-dependency",
+    "typescript"
+  ],
+  "author": "mdehtisham",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mdehtisham/novacraft-ui.git"
+  },
+  "homepage": "https://mdehtisham.github.io/novacraft-ui",
+  "bugs": {
+    "url": "https://github.com/mdehtisham/novacraft-ui/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "typescript": "^5.7.0",
     "vite": "^6.0.0",
