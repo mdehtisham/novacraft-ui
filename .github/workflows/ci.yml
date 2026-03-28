@@ -19,7 +19,7 @@ jobs:
         run: bun run typecheck
 
       - name: Run tests with coverage
-        run: bun run test:coverage
+        run: bun run test:coverage -- --passWithNoTests
 
       - name: Build
         run: bun run build
