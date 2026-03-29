@@ -3,6 +3,12 @@ import '../src/theme/tokens.css';
 
 const preview: Preview = {
   parameters: {
+    docs: {
+      story: {
+        inline: false,
+        height: '250px',
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
